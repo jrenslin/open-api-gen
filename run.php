@@ -24,18 +24,10 @@ class OPEN_API_DESCRIBER {
 
         if (array_is_list($value)) {
 
-            try {
                 return [
                     'type' => 'array',
                     'items' => $this->parseList($value),
                 ];
-            }
-            catch (Exception $e) {
-                return [
-                    'type' => 'array',
-                    'items' => 'TODO TODO TODO',
-                ];
-            }
 
         }
         else {
@@ -62,7 +54,7 @@ class OPEN_API_DESCRIBER {
     public function parseList(array $list):array {
 
         if (empty($list) || empty($list[0])) {
-            throw new Exception("Cannot describe empty list");
+            return [];#  throw new Exception("Cannot describe empty list");
         }
 
         return $this->matchTypeToProperty($list[0], 0);
@@ -90,7 +82,7 @@ class OPEN_API_DESCRIBER {
                 'example' => $value,
                 'description' => 'TODO',
             ],
-            'float' => [
+            'double' => [
                 'type' => 'number',
                 'example' => $value,
                 'description' => 'TODO',
@@ -100,8 +92,13 @@ class OPEN_API_DESCRIBER {
                 'example' => $value,
                 'description' => 'TODO',
             ],
+            'NULL' => [
+                'type' => 'null',
+                'example' => $value,
+                'description' => 'TODO',
+            ],
             'array' => $this->categorizeArray($value, $key),
-            default => throw new Exception("Unknown type encountered for element " . $key)
+            default => throw new Exception("Unknown type encountered for element " . $key . ' (' . gettype($value) . ')')
         };
 
     }
